@@ -2,13 +2,18 @@ import { useRoute } from 'vue-router';
 import { computed, reactive } from 'vue';
 import { useMovieStore } from '../stores/movie';
 import { useState } from './state';
+import { v4 as uuidv4 } from 'uuid';
 
 
 export function useMovie() {
   const movieId = useRoute().params.id;
   const movieStore = useMovieStore();
+
   const { state: reviewStore } = useState('reviews');
   const newReview = reactive({ movieId, author: '', rating: 0, comment: '' });
+
+  const { state: myCollections } = useState('my-collections');
+  const collection = reactive({ id: null, name: '', movies: [] });
 
   const movies = computed(() => {
     return movieStore.filteredMovies;
@@ -35,6 +40,11 @@ export function useMovie() {
     newReview.comment = '';
   }
 
+  function createMovieList() {
+    collection.id = uuidv4();
+    myCollections.value.push({ ...collection })
+  }
+
   return {
     movieId,
     movie,
@@ -42,7 +52,10 @@ export function useMovie() {
     movieReviews,
     averageRating,
     newReview,
+    myCollections,
+    collection,
     movieStore,
-    addReview
+    addReview,
+    createMovieList
   };
 }
