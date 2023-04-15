@@ -43,6 +43,15 @@ export function useMovie() {
   function createMovieList() {
     collection.id = uuidv4();
     myCollections.value.push({ ...collection })
+    collection.name = ''
+  }
+
+  function addToMyCollection(collectionId, movie) {
+    const index = myCollections.value.findIndex(col => col.id === collectionId);
+
+    if (index !== -1) {
+      myCollections.value[index].movies.push(movie);
+    }
   }
 
   return {
@@ -56,6 +65,7 @@ export function useMovie() {
     collection,
     movieStore,
     addReview,
-    createMovieList
+    createMovieList,
+    addToMyCollection
   };
 }
