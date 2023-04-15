@@ -20,9 +20,22 @@ watch(searchQuery, newSearchQuary => {
 
 <template>
   <div class="px-4 py-5 sm:px-6">
-    <div class="py-5">
-      <input ref="input" v-model="searchQuery.param" class="border rounded-md px-4 py-2 w-full" type="text"
-        placeholder="Search...">
+    <div class="flex justify-between mt-8 px-4 py-5">
+      <div>
+        <input ref="input" v-model="searchQuery.param" class="border rounded-md px-4 py-2 w-full" type="text"
+          placeholder="Search...">
+      </div>
+      <div>
+        <label class="block font-medium text-sm text-gray-700" for="sort-by">
+          Filter by
+        </label>
+        <select class="border rounded-md px-4 py-2 w-full" @change="movieStore.filterByGenre($event.target.value)">
+          <option value="all">All Movies</option>
+          <option value="action">Action Movies</option>
+          <option value="comedy">Comedy Movies</option>
+          <option value="drama">Drama Movies</option>
+        </select>
+      </div>
     </div>
     <table class="min-w-full divide-y divide-gray-200">
       <thead class="bg-gray-50">
