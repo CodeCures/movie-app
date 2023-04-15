@@ -1,10 +1,12 @@
+import { useLocalStorage } from "@vueuse/core";
 import axios from "axios";
 import { defineStore } from "pinia";
 
 export const useMovieStore = defineStore('movie', {
   state() {
     return {
-      movies: [],
+      movies: useLocalStorage('movies', []),
+      movie: null,
       initialSearchParams: ['action', 'comedy', 'drama', 'fiction', 'adventure'],
       filter: { type: null, param: null }
     }
