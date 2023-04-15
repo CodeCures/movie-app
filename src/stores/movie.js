@@ -5,7 +5,8 @@ export const useMovieStore = defineStore('movie', {
   state() {
     return {
       movies: [],
-      initialSearchParams: ['action', 'comedy', 'drama', 'fiction', 'adventure']
+      initialSearchParams: ['action', 'comedy', 'drama', 'fiction', 'adventure'],
+      filter: { type: null, param: null }
     }
   },
   getters: {},
@@ -24,4 +25,11 @@ export const useMovieStore = defineStore('movie', {
 
 function url(param) {
   return `https://www.omdbapi.com/?apikey=91c19a5d&s=${param}&page=1`
+}
+
+function filterMoviesByParam(movies, param) {
+  return [...movies].filter(movie => (
+    movie.Title.toLowerCase().includes(param.toLowerCase()) ||
+    movie.Year.toLowerCase().includes(param.toLowerCase())
+  ))
 }
