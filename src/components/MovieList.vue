@@ -1,28 +1,17 @@
 <script setup>
-import { reactive, watch } from 'vue';
-import { useMovieStore } from '../stores/movie';
-import { storeToRefs } from 'pinia';
-
-const { filter } = storeToRefs(useMovieStore())
-const movieStore = useMovieStore();
+import { useMovieFilter } from '../composables/movieFilter';
 
 defineProps({
-  movies: Array
+  movies: Array,
+  title: String
 })
 
 
-const searchQuery = reactive({ type: 'search', param: null })
-
-watch(searchQuery, newSearchQuary => {
-  filter.value = newSearchQuary
-});
-
-const orderBy = (param) => filter.value = { type: 'sort', param }
-
-
+const { searchQuery, orderBy } = useMovieFilter();
 </script>
 
 <template>
+  <h4 class="text-xl">{{ title }}</h4>
   <div class="px-4 py-5 sm:px-6">
     <div class="flex justify-between mt-8 px-4 py-5">
       <div>
@@ -80,10 +69,17 @@ const orderBy = (param) => filter.value = { type: 'sort', param }
               {{ movie.Year }}
             </td>
             <td>
-              <router-link :to="`movies/${movie.imdbID}`"
-                class="w-[70px] bg-blue-500 hover:bg-blue-700 text-white text-sm font-light py-1 px-4 rounded">
-                view
-              </router-link>
+              <div class="space-x-2">
+                <router-link :to="`movies/${movie.imdbID}`"
+                  class="w-[70px] bg-blue-500 hover:bg-blue-700 text-white text-sm font-light py-1 px-4 rounded">
+                  view
+                </router-link>
+
+                <button class="w-[102px] bg-blue-500 hover:bg-blue-700 text-white text-sm font-light py-1 px-4 rounded">
+                  Add to List
+                </button>
+
+              </div>
             </td>
           </tr>
         </template>
