@@ -1,3 +1,4 @@
+import axios from "axios";
 import { defineStore } from "pinia";
 
 export const useMovieStore = defineStore('movie', {
@@ -9,5 +10,18 @@ export const useMovieStore = defineStore('movie', {
   },
   getters: {},
 
-  actions: {}
+  actions: {
+    async getMovies() {
+      const result = await Promise.all(this.initialSearchParams.map(
+        param => axios.get(url(param)).then(({ data }) => data.Search))
+      );
+
+      this.movies = result.flat()
+    }
+  }
 })
+
+
+function url(param) {
+  return `https://www.omdbapi.com/?apikey=91c19a5d&s=${param}&page=1`
+}

@@ -1,17 +1,12 @@
 <script setup>
-import { ref } from 'vue';
-import axios from 'axios'
+import { storeToRefs } from 'pinia';
+import { useMovieStore } from './stores/movie';
 import MovieList from './components/MovieList.vue';
 
-const movies = ref([]);
+const { movies } = storeToRefs(useMovieStore());
+const movieStore = useMovieStore();
 
-async function getMovies() {
-  const response = (await axios.get('https://www.omdbapi.com/?apikey=91c19a5d&s=adventure&page=1')).data
-  movies.value = response.Search
-}
-
-
-getMovies()
+movieStore.getMovies();
 
 </script>
 
