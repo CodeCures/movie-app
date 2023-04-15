@@ -5,8 +5,13 @@ import Homepage from "../views/Homepage.vue";
 const routes = [
   {
     path: '/',
-    component: Homepage,
-    name: 'Home'
+    name: 'Home',
+    component: Homepage
+  },
+  {
+    path: '/movies/:id',
+    name: 'MovieShow',
+    component: () => import('../views/MovieShow.vue')
   }
 ]
 
