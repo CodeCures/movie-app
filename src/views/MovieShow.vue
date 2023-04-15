@@ -7,20 +7,20 @@ import BackButton from '../components/BackButton.vue';
 import RatingStar from '../components/RatingStar.vue';
 import StarRating from 'vue-star-rating'
 import { computed } from '@vue/reactivity';
-import { useLocalStorage } from "@vueuse/core";
+import { useState } from '../composables/state';
 
 const movieId = useRoute().params.id;
+
 
 const { movie } = storeToRefs(useMovieStore());
 const movieStore = useMovieStore();
 movieStore.getMovie(movieId);
 
-
-const reviewStore = useLocalStorage('reviews', []);
+const { state: reviewStore } = useState('reviews');
 const newReview = reactive({ movieId, author: '', rating: 0, comment: '' });
 const movieReviews = computed(() => {
   return reviewStore.value.filter(review => review.movieId === movieId)
-})
+});
 
 const averageRating = computed(() => {
   const totalRating = movieReviews.value.reduce((acc, obj) => acc + obj.rating, 0);
