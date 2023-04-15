@@ -9,7 +9,20 @@ export const useMovieStore = defineStore('movie', {
       filter: { type: null, param: null }
     }
   },
-  getters: {},
+  getters: {
+    searchMoviesResults: state => filterMoviesByParam(
+      state.movies,
+      state.filter.param
+    ),
+
+    filteredMovies: (state) => {
+      if (state.filter.type == 'search') {
+        return state.searchMoviesResults
+      }
+
+      return state.movies;
+    },
+  },
 
   actions: {
     async getMovies() {
