@@ -17,6 +17,8 @@ watch(searchQuery, newSearchQuary => {
   filter.value = newSearchQuary
 });
 
+const orderBy = (param) => filter.value = { type: 'sort', param }
+
 
 </script>
 
@@ -43,7 +45,7 @@ watch(searchQuery, newSearchQuary => {
       <thead class="bg-gray-50">
         <tr>
 
-          <th width="380" scope="col"
+          <th width="380" scope="col" @click="orderBy('title')"
             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer">
             Title
             <span class="ml-1 inline-block">
@@ -52,7 +54,7 @@ watch(searchQuery, newSearchQuary => {
               </svg>
             </span> <small>(click to sort)</small>
           </th>
-          <th scope="col"
+          <th scope="col" @click="orderBy('year')"
             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer">
             Release Year
             <span class="ml-1 inline-block">

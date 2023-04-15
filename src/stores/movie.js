@@ -15,8 +15,29 @@ export const useMovieStore = defineStore('movie', {
       state.filter.param
     ),
 
+    moviesSortedByTitle: state => [...state.movies].sort(
+      (a, b) => a.Title.localeCompare(b.Title)
+    ),
+
+    moviesSortedByYear: state => [...state.movies].sort(
+      (a, b) => b.Year - a.Year
+    ),
+
+    moviesSortedByRating: state => [...state.movies].sort(
+      (a, b) => a.Rating - b.Rating
+    ),
+
     filteredMovies: (state) => {
-      if (state.filter.type == 'search') {
+      if (state.filter.type == 'sort') {
+        const moviesSortedBy = {
+          title: state.moviesSortedByTitle,
+          year: state.moviesSortedByYear,
+          rating: state.moviesSortedByRating
+        }
+
+        return moviesSortedBy[state.filter.param]
+
+      } else if (state.filter.type == 'search') {
         return state.searchMoviesResults
       }
 
