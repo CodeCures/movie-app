@@ -54,6 +54,10 @@ export const useMovieStore = defineStore('movie', {
       this.movies = result.flat()
     },
 
+    getMovie(movieId) {
+      this.movie = findMovie(this.movies, movieId)
+    },
+
     async filterByGenre(genre) {
 
       if (genre && genre !== 'all') {
@@ -76,4 +80,11 @@ function filterMoviesByParam(movies, param) {
     movie.Title.toLowerCase().includes(param.toLowerCase()) ||
     movie.Year.toLowerCase().includes(param.toLowerCase())
   ))
+}
+
+function findMovie(movies, movieId, findByIndex = false) {
+  if (findByIndex) {
+    return [...movies].findIndex(movie => movie.imdbID == movieId)
+  }
+  return [...movies].find(movie => movie.imdbID == movieId)
 }
