@@ -4,6 +4,7 @@ import { useMovieStore } from '../stores/movie';
 import { storeToRefs } from 'pinia';
 
 const { filter } = storeToRefs(useMovieStore())
+const movieStore = useMovieStore();
 
 defineProps({
   movies: Array
@@ -15,6 +16,7 @@ const searchQuery = reactive({ type: 'search', param: null })
 watch(searchQuery, newSearchQuary => {
   filter.value = newSearchQuary
 });
+
 
 </script>
 
