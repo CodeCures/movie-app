@@ -1,12 +1,29 @@
 <script setup>
+import { reactive, watch } from 'vue';
+import { useMovieStore } from '../stores/movie';
+import { storeToRefs } from 'pinia';
+
+const { filter } = storeToRefs(useMovieStore())
+
 defineProps({
   movies: Array
 })
+
+
+const searchQuery = reactive({ type: 'search', param: null })
+
+watch(searchQuery, newSearchQuary => {
+  filter.value = newSearchQuary
+});
 
 </script>
 
 <template>
   <div class="px-4 py-5 sm:px-6">
+    <div class="py-5">
+      <input ref="input" v-model="searchQuery.param" class="border rounded-md px-4 py-2 w-full" type="text"
+        placeholder="Search...">
+    </div>
     <table class="min-w-full divide-y divide-gray-200">
       <thead class="bg-gray-50">
         <tr>
