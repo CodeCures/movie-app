@@ -10,7 +10,7 @@ const routes = [
   },
   {
     path: '/movies/:id',
-    name: 'MovieShow',
+    name: 'ShowMovie',
     component: () => import('../views/MovieShow.vue')
   }
 ]

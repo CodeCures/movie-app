@@ -3,18 +3,30 @@ import BackButton from '../components/BackButton.vue';
 import RatingStar from '../components/RatingStar.vue';
 import StarRating from 'vue-star-rating'
 import { useMovie } from '../composables/movie';
+import { useReview } from '../composables/review';
+import MovieList from '../components/MovieList.vue';
+import { useAverageRating } from '../composables/averageRating';
 
 const {
   movieId,
   movie,
-  movieReviews,
-  averageRating,
-  newReview,
   movieStore,
-  addReview
 } = useMovie();
-
 movieStore.getMovie(movieId)
+
+const {
+  movieReviews,
+  newReview,
+  addReview
+} = useReview(movieId)
+
+const {
+  averageRating,
+  similarMovies
+} = useAverageRating(movieId, movie)
+
+
+
 
 </script>
 
@@ -34,6 +46,13 @@ movieStore.getMovie(movieId)
         <p class="mt-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam quis luctus est, vel gravida
           velit. Nunc lacinia, turpis vel sagittis mattis, ex ipsum tincidunt sapien, vel ullamcorper risus ex a nulla.
           Vestibulum euismod neque vitae nisi facilisis blandit. Praesent in tellus sit amet quam pretium efficitur.</p>
+      </section>
+
+
+      <section v-if="similarMovies.length" class="my-8">
+        <hr class="pb-5">
+        <MovieList :movies="similarMovies" :show-controls="false" title="Movies with similar ratings" />
+        <hr>
       </section>
 
       <section class="max-w-4xl mx-auto my-8">

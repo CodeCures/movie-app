@@ -66,7 +66,7 @@ export const useMovieStore = defineStore('movie', {
         const { data: { Search } } = await axios.get(url(genre));
         this.movies = Search.flat();
       } else {
-        this.fetchMovies();
+        this.getMovies();
       }
     },
   }

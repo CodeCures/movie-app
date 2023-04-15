@@ -1,7 +1,7 @@
 <script setup>
-import { ref } from 'vue';
-import { useMovieFilter } from '../composables/movieFilter';
 import { useMovie } from '../composables/movie';
+import { useMovieFilter } from '../composables/movieFilter';
+import { useCollection } from '../composables/collection';
 import {
   TransitionRoot,
   TransitionChild,
@@ -10,41 +10,37 @@ import {
   DialogTitle,
 } from '@headlessui/vue'
 
+import {
+  collectedMovie,
+  isOpen,
+  openModal,
+  closeModal,
+  addToList
+} from '../helpers';
 
-
-const collectedMovie = ref(null)
-
-const isOpen = ref(false);
-
-function closeModal() {
-  isOpen.value = false
-}
-function openModal(movie) {
-  isOpen.value = true
-  collectedMovie.value = movie
-}
 
 defineProps({
   movies: Array,
-  title: String
+  title: String,
+  showControls: {
+    type: Boolean,
+    default: true
+  }
 })
 
 
 const { searchQuery, orderBy } = useMovieFilter();
 
-const { myCollections, addToMyCollection } = useMovie()
+const { myCollections, addToMyCollection } = useCollection()
 
-function addToList(listId, movie) {
-  addToMyCollection(listId, movie)
+const { movieStore } = useMovie()
 
-  closeModal();
-}
 </script>
 
 <template>
   <h4 class="text-xl">{{ title }}</h4>
   <div class="px-4 py-5 sm:px-6">
-    <div class="flex justify-between mt-8 px-4 py-5">
+    <div v-if="showControls" class="flex justify-between mt-8 px-4 py-5">
       <div>
         <input ref="input" v-model="searchQuery.param" class="border rounded-md px-4 py-2 w-full" type="text"
           placeholder="Search...">
@@ -84,7 +80,8 @@ function addToList(listId, movie) {
             </span>
             <small>(click to sort)</small>
           </th>
-          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          <th v-if="showControls" scope="col"
+            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
             Action
           </th>
         </tr>
@@ -99,9 +96,9 @@ function addToList(listId, movie) {
             <td class="px-6 py-4 whitespace-nowrap">
               {{ movie.Year }}
             </td>
-            <td>
+            <td v-if="showControls">
               <div class="space-x-2">
-                <router-link :to="`movies/${movie.imdbID}`"
+                <router-link :to="{ name: 'ShowMovie', params: { id: movie.imdbID } }"
                   class="w-[70px] bg-blue-500 hover:bg-blue-700 text-white text-sm font-light py-1 px-4 rounded">
                   view
                 </router-link>
@@ -145,7 +142,7 @@ function addToList(listId, movie) {
 
                   <template v-if="myCollections.length">
                     <li v-for="collection in myCollections" :key="collection.name"
-                      @click="addToList(collection.id, collectedMovie)"
+                      @click="addToList(collection.id, collectedMovie, addToMyCollection)"
                       class="flex items-center py-4 hover:bg-gray-100 transition duration-300 ease-in-out cursor-pointer">
                       <svg class="w-8 h-8 text-purple-600 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                         <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" fill="currentColor"></path>

@@ -2,17 +2,17 @@
 import { ref } from 'vue';
 import MovieList from '../components/MovieList.vue';
 import { useMovie } from '../composables/movie';
+import { useCollection } from '../composables/collection';
 
 
 const {
   movies,
   movieStore,
-  myCollections,
-  collection,
-  createMovieList
 } = useMovie();
 
 movieStore.getMovies()
+
+const { myCollections, collection, createMovieList } = useCollection()
 
 
 const isOpen = ref(false);
