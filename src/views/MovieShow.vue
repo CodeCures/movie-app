@@ -1,44 +1,20 @@
 <script setup>
-import { reactive } from 'vue';
-import { useRoute } from 'vue-router';
-import { storeToRefs } from 'pinia';
-import { useMovieStore } from '../stores/movie';
 import BackButton from '../components/BackButton.vue';
 import RatingStar from '../components/RatingStar.vue';
 import StarRating from 'vue-star-rating'
-import { computed } from '@vue/reactivity';
-import { useState } from '../composables/state';
+import { useMovie } from '../composables/movie';
 
-const movieId = useRoute().params.id;
+const {
+  movieId,
+  movie,
+  movieReviews,
+  averageRating,
+  newReview,
+  movieStore,
+  addReview
+} = useMovie();
 
-
-const { movie } = storeToRefs(useMovieStore());
-const movieStore = useMovieStore();
-movieStore.getMovie(movieId);
-
-const { state: reviewStore } = useState('reviews');
-const newReview = reactive({ movieId, author: '', rating: 0, comment: '' });
-const movieReviews = computed(() => {
-  return reviewStore.value.filter(review => review.movieId === movieId)
-});
-
-const averageRating = computed(() => {
-  const totalRating = movieReviews.value.reduce((acc, obj) => acc + obj.rating, 0);
-  const avgRating = (totalRating / movieReviews.value.length).toFixed(1);
-
-  return isNaN(avgRating) ? 0 : avgRating;
-});
-
-
-
-function addReview() {
-  reviewStore.value.push({ ...newReview })
-
-  newReview.author = '';
-  newReview.rating = 0;
-  newReview.comment = '';
-}
-
+movieStore.getMovie(movieId)
 
 </script>
 
@@ -62,7 +38,7 @@ function addReview() {
 
       <section class="max-w-4xl mx-auto my-8">
         <h2 class="text-3xl font-bold mb-4">Leave a Review</h2>
-        <form @submit.prevent="addReview(review)" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <form @submit.prevent="addReview()" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
           <div class="mb-4">
             <label class="block text-gray-700 font-bold mb-2" for="reviewer-name">
               Name

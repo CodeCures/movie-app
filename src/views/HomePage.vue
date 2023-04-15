@@ -1,16 +1,15 @@
 <script setup>
-import { storeToRefs } from 'pinia';
-import { useMovieStore } from '../stores/movie.js';
 import MovieList from '../components/MovieList.vue';
 
-const { filteredMovies } = storeToRefs(useMovieStore());
-const movieStore = useMovieStore();
+const {
+  movies,
+  movieStore
+} = useMovie();
 
-movieStore.getMovies();
-
+movieStore.getMovies()
 
 </script>
 
 <template>
-  <MovieList :movies="filteredMovies" />
+  <MovieList :movies="movies" />
 </template>
