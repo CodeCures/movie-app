@@ -3,10 +3,11 @@ import { storeToRefs } from 'pinia';
 import { useMovieStore } from './stores/movie';
 import MovieList from './components/MovieList.vue';
 
-const { movies } = storeToRefs(useMovieStore());
+const { filteredMovies } = storeToRefs(useMovieStore());
 const movieStore = useMovieStore();
 
 movieStore.getMovies();
+
 
 </script>
 
@@ -16,7 +17,7 @@ movieStore.getMovies();
       <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
           <div class="bg-white divide-y divide-gray-200">
-            <MovieList :movies="movies" />
+            <MovieList :movies="filteredMovies" />
           </div>
         </div>
       </div>
