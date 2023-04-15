@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref, watch } from 'vue';
+import { reactive } from 'vue';
 import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useMovieStore } from '../stores/movie';
@@ -7,6 +7,7 @@ import BackButton from '../components/BackButton.vue';
 import RatingStar from '../components/RatingStar.vue';
 import StarRating from 'vue-star-rating'
 import { computed } from '@vue/reactivity';
+import { useLocalStorage } from "@vueuse/core";
 
 const movieId = useRoute().params.id;
 
@@ -15,33 +16,28 @@ const movieStore = useMovieStore();
 movieStore.getMovie(movieId);
 
 
-const reviews = reactive([
-  {
-    author: 'Evan You',
-    rating: 3,
-    comment: 'This movie has not code in it but it\'s OK'
-  },
-  {
-    author: 'Anthony Fu',
-    rating: 5,
-    comment: 'He used vueUse, so i\'ll give him five'
-  }
-])
-
-const review = reactive({ author: '', rating: 0, comment: '' });
+const reviewStore = useLocalStorage('reviews', []);
+const newReview = reactive({ movieId, author: '', rating: 0, comment: '' });
+const movieReviews = computed(() => {
+  return reviewStore.value.filter(review => review.movieId === movieId)
+})
 
 const averageRating = computed(() => {
-  const totalRating = reviews.reduce((acc, obj) => acc + obj.rating, 0);
-  const avgRating = (totalRating / reviews.length).toFixed(1);
+  const totalRating = movieReviews.value.reduce((acc, obj) => acc + obj.rating, 0);
+  const avgRating = (totalRating / movieReviews.value.length).toFixed(1);
 
   return isNaN(avgRating) ? 0 : avgRating;
 });
 
 
-watch(averageRating, newRating => {
-  movieStore.setMovieAverageRating(movieId, newRating)
-  movieStore.setMovieARatingCount(movieId, reviews.value.length)
-});
+
+function addReview() {
+  reviewStore.value.push({ ...newReview })
+
+  newReview.author = '';
+  newReview.rating = 0;
+  newReview.comment = '';
+}
 
 
 </script>
@@ -71,7 +67,7 @@ watch(averageRating, newRating => {
             <label class="block text-gray-700 font-bold mb-2" for="reviewer-name">
               Name
             </label>
-            <input v-model="review.author"
+            <input v-model="newReview.author"
               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="reviewer-name" type="text" placeholder="Your name">
           </div>
@@ -80,7 +76,7 @@ watch(averageRating, newRating => {
               Rating
             </label>
             <div class="flex flex-row-reverse justify-end">
-              <star-rating :increment="1" :max-rating="5" :star-size="30" v-model:rating="review.rating">
+              <star-rating :increment="1" :max-rating="5" :star-size="30" v-model:rating="newReview.rating">
               </star-rating>
             </div>
           </div>
@@ -88,7 +84,7 @@ watch(averageRating, newRating => {
             <label class="block text-gray-700 font-bold mb-2" for="review-text">
               Review
             </label>
-            <textarea v-model="review.comment"
+            <textarea v-model="newReview.comment"
               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="review-text" placeholder="Write your review"></textarea>
           </div>
@@ -110,8 +106,8 @@ watch(averageRating, newRating => {
       <section class="my-8">
         <h2 class="text-xl font-bold">Reviews</h2>
         <div class="mt-2">
-          <template v-if="reviews.length">
-            <div v-for="review in reviews" :key="review.author" class="flex items-center mb-4">
+          <template v-if="movieReviews.length">
+            <div v-for="review in movieReviews" :key="review.author" class="flex items-center mb-4">
               <img src="https://via.placeholder.com/64" alt="Reviewer Avatar" class="rounded-full h-12 w-12 object-cover">
               <div class="ml-4">
                 <h3 class="text-lg font-bold">{{ review.author }}</h3>
