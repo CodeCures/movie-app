@@ -30,9 +30,6 @@ defineProps({
             </span>
             <small>(click to sort)</small>
           </th>
-          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Action
-          </th>
         </tr>
       </thead>
       <tbody class="bg-white divide-y divide-gray-200">
@@ -44,17 +41,6 @@ defineProps({
             </td>
             <td class="px-6 py-4 whitespace-nowrap">
               {{ movie.Year }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-              <div class="flex  justify-between ">
-                <router-link :to="`movies/${movie.imdbID}`"
-                  class="w-[70px] bg-blue-500 hover:bg-blue-700 text-white text-sm font-light py-1 px-4 rounded">
-                  view
-                </router-link>
-
-                <AddToCollectionButton v-if="showColBtn" :movie="movie" />
-              </div>
-
             </td>
           </tr>
         </template>
