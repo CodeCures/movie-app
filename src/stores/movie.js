@@ -32,7 +32,17 @@ export const useMovieStore = defineStore('movie', {
 
       this.movies = result.flat()
     }
-  }
+  },
+
+  filterByGenre: async function (genre) {
+
+    if (genre && genre !== 'all') {
+      const { data: { Search } } = await axios.get(url(genre));
+      this.movies = Search.flat();
+    } else {
+      this.fetchMovies();
+    }
+  },
 })
 
 
