@@ -1,5 +1,3 @@
-
-
 <template>
   <div class="flex flex-col bg-blue-100 h-screen overflow-y-auto">
     <div class="w-[1100px] mx-auto my-2">

@@ -1,8 +1,10 @@
 <script setup>
+import { onMounted } from 'vue'
 import BackButton from '../components/BackButton.vue';
 import RatingStar from '../components/RatingStar.vue';
 import StarRating from 'vue-star-rating'
 import { useMovie } from '../composables/movie';
+import { useGsap } from '../composables/gsap';
 import { useReview } from '../composables/review';
 import MovieList from '../components/MovieList.vue';
 import { useAverageRating } from '../composables/averageRating';
@@ -25,6 +27,8 @@ const {
   similarMovies
 } = useAverageRating(movieId, movie)
 
+onMounted(() => movieReviews.value.length && useGsap('.review'))
+
 
 
 
@@ -41,12 +45,6 @@ const {
           <span class="ml-2 font-bold">{{ averageRating || 'N/A' }}</span>
         </div>
       </header>
-      <section class="my-8">
-        <h2 class="text-xl font-bold">Descriptions</h2>
-        <p class="mt-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam quis luctus est, vel gravida
-          velit. Nunc lacinia, turpis vel sagittis mattis, ex ipsum tincidunt sapien, vel ullamcorper risus ex a nulla.
-          Vestibulum euismod neque vitae nisi facilisis blandit. Praesent in tellus sit amet quam pretium efficitur.</p>
-      </section>
 
 
       <section v-if="similarMovies.length" class="my-8">
@@ -102,7 +100,7 @@ const {
         <h2 class="text-xl font-bold">Reviews</h2>
         <div class="mt-2">
           <template v-if="movieReviews.length">
-            <div v-for="review in movieReviews" :key="review.author" class="flex items-center mb-4">
+            <div v-for="review in movieReviews" :key="review.author" class="review flex items-center mb-4">
               <img src="https://via.placeholder.com/64" alt="Reviewer Avatar" class="rounded-full h-12 w-12 object-cover">
               <div class="ml-4">
                 <h3 class="text-lg font-bold">{{ review.author }}</h3>

@@ -1,6 +1,6 @@
 import { storeToRefs } from "pinia";
 import { useMovieStore } from "../stores/movie";
-import { reactive, watch } from "vue";
+import { reactive } from "vue";
 
 export function useMovieFilter() {
   const { filter } = storeToRefs(useMovieStore());
@@ -8,9 +8,7 @@ export function useMovieFilter() {
   const searchQuery = reactive({ type: 'search', param: null });
 
 
-  watch(searchQuery, newSearchQuery => {
-    filter.value = newSearchQuery;
-  });
+  const filterBy = (query) => filter.value = { ...query };
 
 
   const orderBy = (param) => {
@@ -19,6 +17,7 @@ export function useMovieFilter() {
 
   return {
     searchQuery,
-    orderBy
+    orderBy,
+    filterBy
   };
 }

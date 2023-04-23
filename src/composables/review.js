@@ -1,4 +1,5 @@
 import { computed, reactive } from 'vue';
+import { useToast } from "vue-toastification";
 import { filterReviewsByMovieId, useStateValue } from '../helpers';
 
 export function useReview(movieId) {
@@ -16,6 +17,8 @@ export function useReview(movieId) {
     newReview.author = '';
     newReview.rating = 0;
     newReview.comment = '';
+
+    useToast().success('review added successfully!');
   }
 
   return {

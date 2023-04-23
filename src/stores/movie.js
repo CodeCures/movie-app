@@ -1,13 +1,13 @@
-import { useLocalStorage } from "@vueuse/core";
 import axios from "axios";
 import { defineStore } from "pinia";
+import { useState } from '../composables/state'
 
 export const useMovieStore = defineStore('movie', {
   state() {
     return {
-      movies: useLocalStorage('movies', []),
+      movies: useState('movies').state,
       movie: null,
-      initialSearchParams: ['action', 'comedy', 'drama', 'fiction', 'adventure'],
+      initialSearchParams: ['spider'],
       filter: { type: null, param: null }
     }
   },
@@ -79,10 +79,12 @@ function url(param) {
 
 function filterMoviesByParam(movies, param) {
   return [...movies].filter(movie => (
-    movie.Title.toLowerCase().includes(param.toLowerCase()) ||
-    movie.Year.toLowerCase().includes(param.toLowerCase())
+    movie.Title.toLowerCase().includes(param?.toLowerCase()) ||
+    movie.Year.toLowerCase().includes(param?.toLowerCase())
   ))
 }
+
+
 
 function findMovie(movies, movieId, findByIndex = false) {
   if (findByIndex) {
